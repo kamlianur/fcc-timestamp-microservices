@@ -24,15 +24,29 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get('/api/:date', (req, res) => {
-  const paramsDate = req.params.date;
-  console.log(paramsDate)
-  const invalidDate = 'Invalid Date'
-  const date = parseInt(paramsDate) < 10000 
-    ? new Date(paramsDate)
-    : new Date(parseInt(paramsDate))
+app.get('/api/:date?', (req, res) => {
+  const date = req.params.date;
+  // console.log(paramsDate)
+  let unix, utc, dateObj, now;
+  const isUnix = /^\d+$/.test(date);
 
-  res.json({unix: date.valueOf(), utc: new Date(date)})
+  if (!date) {
+    dateObj = new Date();
+  } else if (date && isUnix) {
+    dateObj = new Date(parseInt(date));
+  } else if (date && !isUnix) {
+    dateObj = new Date(date)
+  }
+
+  if (dateObj.toString() == 'Invalid Date') {
+    res.json({error: 'Invalid Date'})
+    return;
+  }
+
+  unix = dateObj.getTime();
+  utc = dateObj.toUTCString();
+
+  res.json({unix: unix, utc: utc})
 })
 
 
