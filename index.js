@@ -27,7 +27,7 @@ app.get("/api/hello", function (req, res) {
 app.get('/api/:date?', (req, res) => {
   const date = req.params.date;
   // console.log(paramsDate)
-  let unix, utc, dateObj, now;
+  let unix, utc, dateObj;
   const isUnix = /^\d+$/.test(date);
 
   if (!date) {
